@@ -7,7 +7,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = "cicd-security-tf-state-1"
+    bucket         = "cicd-security-tf-state-2"
     key            = "tf-state-setup"
     region         = "eu-central-1"
     encrypt        = true
