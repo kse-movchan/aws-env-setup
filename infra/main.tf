@@ -32,4 +32,5 @@ locals {
   prefix = var.prefix
 }
 
+
 data "aws_region" "current" {}
