@@ -6,6 +6,7 @@ terraform {
     }
   }
 
+
   backend "s3" {
     bucket         = "cicd-security-tf-state-2"
     key            = "tf-state-setup"
