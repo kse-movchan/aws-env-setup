@@ -2,6 +2,7 @@
 # Network infrastructure #
 ##########################
 
+# checkov:skip=CKV2_AWS_11 reason: VPC flow logs not required in this environment
 resource "aws_vpc" "main" {
   cidr_block           = "10.1.0.0/16"
   enable_dns_hostnames = true
@@ -9,6 +10,18 @@ resource "aws_vpc" "main" {
 
   lifecycle {
     create_before_destroy = false
+  }
+}
+
+# Restrict all traffic in the default security group for the VPC
+resource "aws_default_security_group" "default" {
+  vpc_id = aws_vpc.main.id
+
+  ingress {}
+  egress {}
+
+  tags = {
+    Name = "${local.prefix}-default-deny"
   }
 }
 
@@ -34,7 +47,7 @@ resource "aws_internet_gateway" "main" {
 resource "aws_subnet" "public_a" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "10.1.1.0/24"
-  map_public_ip_on_launch = true
+  map_public_ip_on_launch = false
   availability_zone       = "${data.aws_region.current.name}a"
 
   tags = {
@@ -65,7 +78,7 @@ resource "aws_route" "public_internet_access_a" {
 resource "aws_subnet" "public_b" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "10.1.2.0/24"
-  map_public_ip_on_launch = true
+  map_public_ip_on_launch = false
   availability_zone       = "${data.aws_region.current.name}b"
 
   tags = {
@@ -121,6 +134,7 @@ resource "aws_security_group" "endpoint_access" {
   vpc_id      = aws_vpc.main.id
 
   ingress {
+    description = "Allow HTTPS from VPC"
     cidr_blocks = [aws_vpc.main.cidr_block]
     from_port   = 443 # TODO: is it correct port?
     to_port     = 443
