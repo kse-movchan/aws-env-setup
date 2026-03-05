@@ -11,8 +11,10 @@ data "aws_ami" "amazon_linux" {
 resource "aws_security_group" "alb" {
   name   = "${local.prefix}-alb"
   vpc_id = aws_vpc.main.id
+  description = "Security group for ALB"
 
   ingress {
+    description = "Allow HTTP from anywhere"
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
@@ -20,6 +22,7 @@ resource "aws_security_group" "alb" {
   }
 
   egress {
+    description = "Allow all outbound traffic"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
@@ -30,8 +33,10 @@ resource "aws_security_group" "alb" {
 resource "aws_security_group" "web" {
   name   = "${local.prefix}-web"
   vpc_id = aws_vpc.main.id
+  description = "Security group for web EC2 instances"
 
   ingress {
+    description = "Allow HTTP from ALB"
     from_port       = 80
     to_port         = 80
     protocol        = "tcp"
@@ -39,6 +44,7 @@ resource "aws_security_group" "web" {
   }
 
   egress {
+    description = "Allow all outbound traffic"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
