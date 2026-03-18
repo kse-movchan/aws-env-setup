@@ -4,6 +4,7 @@ Infrastructure as Code best practice is to keep as much configuration in code as
 
 ## Prerequisites
 
+
 - AWS account with permissions to create S3 buckets and DynamoDB tables
 - A CI bot user (e.g. `ci-bot`) for use in CI/CD pipelines
 
