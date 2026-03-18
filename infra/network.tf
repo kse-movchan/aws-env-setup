@@ -17,9 +17,6 @@ resource "aws_vpc" "main" {
 resource "aws_default_security_group" "default" {
   vpc_id = aws_vpc.main.id
 
-  ingress {}
-  egress {}
-
   tags = {
     Name = "${local.prefix}-default-deny"
   }
@@ -198,7 +195,11 @@ resource "aws_vpc_endpoint" "s3" {
   service_name      = "com.amazonaws.${data.aws_region.current.name}.s3"
   vpc_endpoint_type = "Gateway"
   route_table_ids = [
-    aws_vpc.main.default_route_table_id
+    aws_vpc.main.default_route_table_id,
+    aws_route_table.public_a.id,
+    aws_route_table.public_b.id,
+    aws_route_table.private_a.id,
+    aws_route_table.private_b.id
   ]
   tags = {
     Name = "${local.prefix}-s3-endpoint"
